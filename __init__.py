@@ -159,6 +159,7 @@ def main_page():
 
 ## UPLOADING VIDEO FILES ##
 # https://dev.to/nagatodev/uploading-media-files-to-your-flask-application-5h9k
+# Handling redirects - https://thewebdev.info/2022/05/22/how-to-pass-arguments-into-redirecturl_for-of-flask/
 @app.route('/video_upload', methods=['POST','GET'])
 def video_upload():
   logging.info("Trying to upload video file!")
