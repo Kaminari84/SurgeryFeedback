@@ -126,10 +126,10 @@ def main_page():
                                  "You adjusted needle grasp position based on depth of bite."]},
 
       "fail_level": {"encouragement": "Almost there!", 
-                      "general_assess": "Still, your gesture sequence shows little to no intent.",
+                      "general_assessment": "Still, your gesture sequence shows little to no intent.",
                       "issue_list_intro": "Possible issues (compare with ideal video on the right):",
                       "issues": ["Likely more than 3 re-positions of the needle happend", 
-                                 "You grasped the needle <u>outside</u> of the acceptable range."]
+                                 "You grasped the needle outside of the acceptable range."]
                       }
     },
     {
@@ -139,8 +139,8 @@ def main_page():
                       "general_assessment": "Your needle driving is smooth.",
                       "issue_list_intro": "You accomplishments:",
                       "issues": ["Smooth, continuous motion", 
-                                 "Maximum 1 adjustment during driving (no completewithdrawal of needle",
-                                 "Maximum 1 additiona re-grab of needle"]},
+                                 "Maximum 1 adjustment during driving (no complete withdrawal of needle)",
+                                 "Maximum 1 additional re-grab of needle"]},
 
       "fail_level": {"encouragement": "Almost there!", 
                       "general_assessment": "Still, your needle driving could be improved.",
@@ -164,32 +164,54 @@ def video_upload():
   logging.info("Trying to upload video file!")
   video_files = os.listdir(os.path.join(app.root_path,'static/video/'))
 
+  message = None
+  status = None
+
   if request.method == 'POST':
     # check if the post request has the file part
     if 'file' not in request.files:
-      #flash('No file part')
-      logging.info("No file part!")
-      return redirect(request.url)
-    file = request.files['file']
-    logging.info("File to upload"+str(file))
-    # If the user does not select a file, the browser submits an
-    # empty file without a filename.
-    if file.filename == '':
-      logging.info("File empty!")
-      #flash('No selected file')
-      return redirect(request.url)
-    if file and allowed_file(file.filename):
-      logging.info("Uploading!")
-      #flash("Uploading!")
-      filename = secure_filename(file.filename)
-      file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-      return redirect(request.url)
+      status = "ERROR"
+      message = "File part missing in request!"      
+      #return redirect(request.url)
+    else:
+      file = request.files['file']
+      logging.info("File to upload"+str(file))
+      # If the user does not select a file, the browser submits an
+      # empty file without a filename.
+      if file.filename == '':
+        logging.info("File empty!")
+        status = "ERROR"
+        message = "File not selected!"
+        #return redirect(request.url)
+      elif file and allowed_file(file.filename):
+        logging.info("Uploading!")
+        status = "OK"
+        message = "Upload successful!"
+        filename = secure_filename(file.filename)
+        file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        #return redirect(request.url)
+      else:
+        logging.info("file extensions not allowed!")
+        status = "ERROR"
+        message = f"Only mp4 formal supported, you tried: {file.filename}"
+      
   
-  return render_template('video_upload.html', video_files = video_files)
+  return render_template('video_upload.html', status=status, message=message, 
+  video_files = video_files)
 
 def allowed_file(filename):
   return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+@app.route('/delete_video', methods=['POST','GET'])
+def video_delete():
+  video_file = request.args.get('video_file')
+  logging.info(f"Video file to remove: {video_file}")
+
+  os.remove(os.path.join(app.config['UPLOAD_FOLDER'], video_file))
+
+  json_resp = json.dumps({'status': 'OK', 'message':'Removed file'+str()})
+  return make_response(json_resp, 200, {"content_type":"application/json"})
 
 
 ## TEST ENTRIES ##

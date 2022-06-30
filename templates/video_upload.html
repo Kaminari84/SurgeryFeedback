@@ -1,21 +1,112 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
   <head>
-    <title>Upload Video File</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>Upload Video Files</title>
+
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+
+    <!-- Bootstrap CSS CDN -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+    <!-- Font Awesome JS -->
+    <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/solid.js" integrity="sha384-tzzSw1/Vo+0N5UhStP3bvwWPq+uvzCMfrN1fEFe+xBmv1C/AtVX5K0uZtmcHitFZ" crossorigin="anonymous"></script>
+    <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/fontawesome.js" integrity="sha384-6OIrr52G08NpOFSZdxxz1xdNSndlD4vdcf/q2myIUVO0VsqaGHJsB0RaBE01VTOY" crossorigin="anonymous"></script>
+
+    <!-- Material Components -->
+    <link rel="stylesheet" href="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.css">
+    <script src="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.js"></script>
+    <link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet'>
+    <link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet'>
+      
+    <!--SCRIPT-->
+    <script>
+      var video_files = ( "{{video_files}}"=="None" ? null : "{{video_files}}" );
+     
+      $( document ).ready(function() {
+	      console.log("Document ready!");
+        console.log("Videos: "+video_files);
+      });
+
+      function removeVideo(video_file) {
+        console.log("Removing video file: "+video_file);
+
+        var request = $.ajax({
+          url: "/delete_video",
+          type: "GET",
+          data: {video_file: video_file},
+          dataType: "html",
+          async: true, 
+          success : function (msg)
+          {
+            var obj = JSON.parse(msg);
+
+            if (obj.status !== "OK") {
+              console.log("Something went wrong and event did not log: "+obj.message);
+            } else {
+              console.log("Got response from video delete:");
+              console.log(obj);
+
+            }
+
+            window.location.reload();
+          }
+        });
+      }
+
+    </script>
+
   </head>
+
   <body>
-    <h1>Upload new File</h1>
+    <!-- Page Content  -->
+    <main role="main" class="container" id="content" >
+      
+    <h1>Upload MP4 Video File </h1>
     <form method=post enctype=multipart/form-data>
       <input type=file name=file>
       <input type=submit value=Upload>
     </form>
 
+    <div style="height: 10px"></div>
+
+    {% if status is not none %}
+      {% if status == "OK" %}
+      <div class="alert alert-success">
+        File upload successful: {{ message }}
+      </div>
+      {% elif status == "ERROR" %}
+      <div class="alert alert-danger">
+        Error uploading file: {{ message }}
+      </div>
+      {% else %}
+      <div class="alert alert-warning">
+        Unknown status of upload - check if file is listed!
+      </div>
+      {% endif %}
+
+    {% endif %}
+    
+    <div style="height: 30px"></div>
+
     <h3>Video files on server:</h3>
     <ul>
     {% for video_file in video_files %}
-      <li>{{ video_file }}</li>
+      <li>
+        {{ video_file }}
+        <button id="{{ video_file }}" onClick="removeVideo('{{ video_file }}');" type="button" class="btn btn-outline-light text-danger">Remove</button>
+      </li>
     {% endfor %}
     </ul>
 
-  </body>
+  </main>
+
+  <!-- Bootstrap JS -->
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+
+</body>
+
 </html>
