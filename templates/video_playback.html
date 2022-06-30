@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>LM Bias Inspection Tool</title>
+
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+
+    <!-- Bootstrap CSS CDN -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+    <!-- Font Awesome JS -->
+    <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/solid.js" integrity="sha384-tzzSw1/Vo+0N5UhStP3bvwWPq+uvzCMfrN1fEFe+xBmv1C/AtVX5K0uZtmcHitFZ" crossorigin="anonymous"></script>
+    <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/fontawesome.js" integrity="sha384-6OIrr52G08NpOFSZdxxz1xdNSndlD4vdcf/q2myIUVO0VsqaGHJsB0RaBE01VTOY" crossorigin="anonymous"></script>
+
+    <!-- Material Components -->
+    <link rel="stylesheet" href="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.css">
+    <script src="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.js"></script>
+    <link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet'>
+    <link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet'>
+      
+    <!--SCRIPT-->
+    <script>
+      var vid_list = ( "{{video_list}}"=="None" ? null : "{{video_list}}" );
+      var needle_driving_skill = ( "{{needle_driving_skill}}"=="None" ? null : "{{needle_driving_skill}}" );
+
+      $( document ).ready(function() {
+	      console.log("Document ready!");
+        console.log("Videos: "+vid_list);
+        console.log("Needle driving: "+needle_driving_skill);
+
+      });
+
+    </script>
+
+  </head>
+
+  <body>
+    <!-- Page Content  -->
+    <main role="main" class="container" id="content" >
+      <!--<div class="py-2 text-center">
+        <h2>Top 4 skill improvement considerations</h2>
+      </div>-->
+
+      {% for domain_spec in domain_specs %}
+
+        <!-- Space -->
+        <div class="row" style="height: 20px" ></div>
+          
+        <div class="row justify-content-center">
+          <!-- LABEL ROW -->
+          <div class="col-md-12 order-md-1 mx-auto">
+            <div class="text-justify-left">
+              <h2>{{ domain_spec.domain_name }}</h2>
+            </div>
+          </div>
+        
+        </div>
+
+        <!-- Video label -->
+        <!-- Bootstrap4 centering: https://stackoverflow.com/questions/42528411/center-the-content-inside-a-column-in-bootstrap -->
+        <div class="row justify-content-center">
+          <!-- LABEL ROW -->
+          <div class="col-md-6 order-md-1 mx-auto">
+            <div class="text-center">
+              <strong>Video from your task</strong>
+            </div>
+              
+          </div>
+    
+          <div class="col-md-6 order-md-1 mx-auto">
+            <div class="text-center">
+              <strong>Ideal reference video</strong>
+            </div>
+          </div>
+        </div>
+
+        <!-- VIDEO ROW -->
+        <div class="row justify-content-center">        
+          <div class="col-md-6 order-md-1 mx-auto">
+            <div class="text-center">
+              <!--<div class="embed-responsive embed-responsive-16by9">
+                <iframe class="embed-responsive-item" src="/static/video/negative1_72.avi" allowfullscreen></iframe>
+              </div>-->
+              <video width="100%" height="auto" controls>
+                <source src={{ url_for('static', filename="video/P13_session1.mp4") }} type="video/mp4">
+                Your browser does not support the video tag.
+              </video>
+            </div>
+            
+          </div>
+
+          <div class="col-md-6 order-md-1 mx-auto">
+            <div class="text-center">
+              <video width="100%" height="auto" controls>
+                  <source src={{ url_for('static', filename="video/P13_session1.mp4") }} type="video/mp4">
+                  Your browser does not support the video tag.
+                </video>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- TIP ROW -->
+        {% if domain_spec.skill is not none %}
+        <div class="row justify-content-center">        
+          <div class="col-md-10 order-md-1 mx-auto">
+
+            <h5>
+            <!-- IDEAL -->
+            {% if domain_spec.skill == 1 %}
+              <div class="alert alert-success">
+                <b>{{ domain_spec.ideal_level.encouragement }}</b> 
+                {{ domain_spec.ideal_level.general_assessment }} <br />
+                {{ domain_spec.ideal_level.issue_list_intro }}
+                <ul>
+                  {% for issue in domain_spec.ideal_level.issues %}
+                    <li> {{ issue }}</li>
+                  {% endfor %}
+                </ul>
+              </div>
+            <!-- ADEQUATE - FAIL -->
+            {% elif domain_spec.skill == 0 %}
+              <div class="alert alert-info">
+                <b>{{ domain_spec.fail_level.encouragement }}</b> 
+                {{ domain_spec.fail_level.general_assessment }} <br />
+                {{ domain_spec.fail_level.issue_list_intro }}
+                <ul>
+                  {% for issue in domain_spec.fail_level.issues %}
+                    <li> {{ issue }}</li>
+                  {% endfor %}
+                </ul>
+              </div>
+            {% endif %}
+            </h5>
+            
+          </div>
+        </div>
+        {% else %}
+          <h4>
+          <div class="alert alert-danger">
+              Missing '{{ domain_spec.skill_var_name }}' option in URL!
+          </div>
+          </h4>
+        {% endif %}
+
+      {% endfor %}
+     
+
+    </main>
+
+    <!-- Bootstrap JS -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+
+  </body>
+  
+</html>
+  
