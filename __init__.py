@@ -206,7 +206,7 @@ def allowed_file(filename):
 @app.route('/delete_video', methods=['POST','GET'])
 def video_delete():
   video_file = request.args.get('video_file')
-  logging.info(f"Video file to remove: {video_file}")
+  logging.info("Video file to remove:"+str(video_file))
 
   os.remove(os.path.join(app.config['UPLOAD_FOLDER'], video_file))
 
