@@ -193,7 +193,7 @@ def video_upload():
       else:
         logging.info("file extensions not allowed!")
         status = "ERROR"
-        message = f"Only mp4 formal supported, you tried: {file.filename}"
+        message = "Only mp4 formal supported, you tried: " +str(file.filename)
       
   
   return render_template('video_upload.html', status=status, message=message, 
