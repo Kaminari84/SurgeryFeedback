@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Upload Video File</title>
+  </head>
+  <body>
+    <h1>Upload new File</h1>
+    <form method=post enctype=multipart/form-data>
+      <input type=file name=file>
+      <input type=submit value=Upload>
+    </form>
+
+    <h3>Video files on server:</h3>
+    <ul>
+    {% for video_file in video_files %}
+      <li>{{ video_file }}</li>
+    {% endfor %}
+    </ul>
+
+  </body>
+</html>
