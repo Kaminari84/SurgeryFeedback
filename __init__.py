@@ -13,7 +13,7 @@ from pytz import common_timezones
 from pytz import country_timezones
 
 from flask import Flask, request, make_response, render_template, current_app, g
-from flask import flash, redirect
+from flask import redirect, url_for
 from werkzeug.utils import secure_filename
 from flask_sqlalchemy import SQLAlchemy
 import sqlalchemy
@@ -179,9 +179,9 @@ def video_upload():
     if file and allowed_file(file.filename):
       logging.info("Uploading!")
       #flash("Uploading!")
-      #filename = secure_filename(file.filename)
-      #file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-      #return redirect(url_for('download_file', name=filename))
+      filename = secure_filename(file.filename)
+      file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+      return redirect(url_for('download_file', name=filename))
   return '''
     <!doctype html>
     <title>Upload new File</title>
