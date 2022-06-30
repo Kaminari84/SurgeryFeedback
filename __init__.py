@@ -162,6 +162,8 @@ def main_page():
 @app.route('/video_upload', methods=['POST','GET'])
 def video_upload():
   logging.info("Trying to upload video file!")
+  video_files = os.listdir(os.path.join(app.root_path,'static/video/'))
+
   if request.method == 'POST':
     # check if the post request has the file part
     if 'file' not in request.files:
@@ -182,15 +184,8 @@ def video_upload():
       filename = secure_filename(file.filename)
       file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
       return redirect(request.url)
-  return '''
-    <!doctype html>
-    <title>Upload new File</title>
-    <h1>Upload new File</h1>
-    <form method=post enctype=multipart/form-data>
-      <input type=file name=file>
-      <input type=submit value=Upload>
-    </form>
-    '''
+  
+  return render_template('video_upload.html', video_files = video_files)
 
 def allowed_file(filename):
   return '.' in filename and \
