@@ -13,6 +13,8 @@ from pytz import common_timezones
 from pytz import country_timezones
 
 from flask import Flask, request, make_response, render_template, current_app, g
+from flask import flash, redirect
+from werkzeug.utils import secure_filename
 from flask_sqlalchemy import SQLAlchemy
 import sqlalchemy
 from sqlalchemy import func
@@ -22,6 +24,7 @@ from flask_cors import CORS
 
 import socket # for non HTTP network communication
 
+basedir = os.path.abspath(os.path.dirname(__file__))
 ENV_VARS = {}
 app = Flask(__name__, static_folder='static')
 
@@ -29,6 +32,10 @@ app.config['TEMPLATES_AUTO_RELOAD'] = True
 app.config['EXPLAIN_TEMPLATE_LOADING'] = True
 env = app.jinja_env
 env.add_extension("jinja2.ext.loopcontrols") #Loop extension to enable {% break %}
+
+UPLOAD_FOLDER = os.path.join(basedir, 'static/video')
+ALLOWED_EXTENSIONS = {'mp4'}
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 app.app_context().push()
 CORS(app)
@@ -149,6 +156,44 @@ def main_page():
                             domain_specs = domain_specs)
                       )
   return resp
+
+## UPLOADING VIDEO FILES ##
+# https://dev.to/nagatodev/uploading-media-files-to-your-flask-application-5h9k
+@app.route('/video_upload', methods=['POST','GET'])
+def video_upload():
+  logging.info("Trying to upload video file!")
+  if request.method == 'POST':
+    # check if the post request has the file part
+    if 'file' not in request.files:
+      flash('No file part')
+      return redirect(request.url)
+    file = request.files['file']
+    logging.info("File to upload"+str(file))
+    # If the user does not select a file, the browser submits an
+    # empty file without a filename.
+    if file.filename == '':
+      logging.info("File empty!")
+      flash('No selected file')
+      return redirect(request.url)
+    if file and allowed_file(file.filename):
+      flash("Uploading!")
+      #filename = secure_filename(file.filename)
+      #file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+      #return redirect(url_for('download_file', name=filename))
+  return '''
+    <!doctype html>
+    <title>Upload new File</title>
+    <h1>Upload new File</h1>
+    <form method=post enctype=multipart/form-data>
+      <input type=file name=file>
+      <input type=submit value=Upload>
+    </form>
+    '''
+
+def allowed_file(filename):
+  return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
 
 ## TEST ENTRIES ##
 
