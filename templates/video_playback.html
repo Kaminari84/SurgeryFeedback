@@ -26,11 +26,20 @@
     <script>
       var vid_list = ( "{{video_list}}"=="None" ? null : "{{video_list}}" );
       var needle_driving_skill = ( "{{needle_driving_skill}}"=="None" ? null : "{{needle_driving_skill}}" );
+      var needle_handling_skill = ( "{{needle_handling_skill}}"=="None" ? null : "{{needle_handling_skill}}" );
 
       $( document ).ready(function() {
 	      console.log("Document ready!");
         console.log("Videos: "+vid_list);
-        console.log("Needle driving: "+needle_driving_skill);
+        console.log("URL Needle driving: "+needle_driving_skill);
+        console.log("URL Needle handling: "+needle_handling_skill);
+
+        {% for domain_spec in domain_specs %}
+          console.log("Video: {{domain_spec.p_skill_video}}");
+          console.log("Skill level: {{domain_spec.skill}}");
+
+        {% endfor %}
+
 
       });
 
@@ -86,7 +95,7 @@
                 <iframe class="embed-responsive-item" src="/static/video/negative1_72.avi" allowfullscreen></iframe>
               </div>-->
               <video width="100%" height="auto" controls>
-                <source src={{ url_for('static', filename="video/Robota.mp4") }} type="video/mp4">
+                <source src={{ url_for('static', filename="video/"+domain_spec.p_skill_video) }} type="video/mp4">
                 Your browser does not support the video tag.
               </video>
             </div>
@@ -96,7 +105,7 @@
           <div class="col-md-6 order-md-1 mx-auto">
             <div class="text-center">
               <video width="100%" height="auto" controls>
-                  <source src={{ url_for('static', filename="video/Robota.mp4") }} type="video/mp4">
+                  <source src={{ url_for('static', filename="video/"+domain_spec.ideal_skill_video) }} type="video/mp4">
                   Your browser does not support the video tag.
                 </video>
             </div>

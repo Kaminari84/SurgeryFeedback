@@ -1,4 +1,7 @@
 import os
+from pathlib import Path
+import glob
+import re
 import sys
 import logging
 import random
@@ -115,9 +118,43 @@ def main_page():
   needle_driving_skill = safe_cast(request.args.get('needle_driving_skill'), int, default=None)
   logging.info("Needle driving skill:"+str(needle_driving_skill))
 
+  pid = safe_cast(request.args.get('p'), int, default=None)
+  logging.info("PID:"+str(pid))
+
+  # get videos for the participant
+  pidVideos = glob.glob(os.path.join(app.root_path,'static/video/','p'+str(pid)+'_*.mp4'))
+  pidVideos = [os.path.basename(path) for path in pidVideos]
+  logging.info("PID videos:" + str(pidVideos))
+
+  # default videos
+  needle_handling_ideal_video = 'handling_ideal.mp4'
+  needle_driving_ideal_video = 'driving_ideal.mp4'
+
+  needle_handling_p_video = 'Robota.mp4'
+  needle_driving_p_video = 'Robota.mp4'
+
+  # extract from video if not explicitly specified
+  for pidVid in pidVideos:
+    if 'handling' in pidVid:
+      if needle_handling_skill == None:
+        digits = re.findall(r'\d+', pidVid)
+        needle_handling_skill = safe_cast(digits[1], int, default=None)
+      needle_handling_p_video = pidVid
+      logging.info("Extracted 'needle handling' skill from video "+str(pidVid)+": "+str(needle_handling_skill))
+    
+  for pidVid in pidVideos:
+    if 'driving' in pidVid:
+      if needle_driving_skill == None:
+        digits = re.findall(r'\d+', pidVid)
+        needle_driving_skill = safe_cast(digits[1], int, default=None)
+      needle_driving_p_video = pidVid
+      logging.info("Extracted 'needle driving' skill from video "+str(pidVid)+": "+str(needle_driving_skill))
+    
   domain_specs = [ 
     {
-      "skill": needle_handling_skill, "skill_var_name": "needle_handling_skill", 
+      "skill": needle_handling_skill, "skill_var_name": "needle_handling_skill",
+      "p_skill_video": needle_handling_p_video,
+      "ideal_skill_video": needle_handling_ideal_video,
       "domain_name": "Needle Handling (Needle Repositions)",
       "ideal_level": {"encouragement": "Good work!", 
                       "general_assessment": "Your gestures show intent.",
@@ -134,6 +171,8 @@ def main_page():
     },
     {
       "skill": needle_driving_skill, "skill_var_name": "needle_driving_skill", 
+      "p_skill_video": needle_driving_p_video,
+      "ideal_skill_video": needle_driving_ideal_video,
       "domain_name": "Needle Driving (Driving Smoothness)",
       "ideal_level": {"encouragement": "Good work!", 
                       "general_assessment": "Your needle driving is smooth.",
@@ -163,7 +202,11 @@ def main_page():
 @app.route('/video_upload', methods=['POST','GET'])
 def video_upload():
   logging.info("Trying to upload video file!")
-  video_files = os.listdir(os.path.join(app.root_path,'static/video/'))
+  #video_files = os.listdir(os.path.join(app.root_path,'static/video/'))
+  
+  paths = sorted(Path(os.path.join(app.root_path,'static/video/')).iterdir(), key=os.path.getmtime, reverse=True)
+  video_files = [path.name for path in paths]
+  logging.info("Paths:"+str(video_files))
 
   message = None
   status = None
