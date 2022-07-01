@@ -206,8 +206,10 @@ def video_upload():
   
   #paths = sorted(Path(os.path.join(app.root_path,'static/video/')).iterdir(), key=os.path.getmtime, reverse=True)
   #video_files = [path.name for path in paths]
-  paths_unsorted = glob.glob(os.path.join(app.root_path,'static/video/', '*.mp4'))
-  paths = sorted(paths_unsorted, key=lambda t: os.stat(t).óst_mtime, reverse=True)
+  paths_unsorted = glob.glob(os.path.join(app.root_path, 'static/video/', '*.mp4'))
+  #print("Paths unsorted:", str(paths_unsorted))
+  # print("OS stat:", os.stat(paths_unsorted[0]))
+  paths = sorted(paths_unsorted, key=lambda t: os.stat(t).st_mtime, reverse=True)
   video_files = [os.path.basename(path) for path in paths]
   logging.info("Paths:"+str(video_files))
 
