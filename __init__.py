@@ -204,8 +204,11 @@ def video_upload():
   logging.info("Trying to upload video file!")
   #video_files = os.listdir(os.path.join(app.root_path,'static/video/'))
   
-  paths = sorted(Path(os.path.join(app.root_path,'static/video/')).iterdir(), key=os.path.getmtime, reverse=True)
-  video_files = [path.name for path in paths]
+  #paths = sorted(Path(os.path.join(app.root_path,'static/video/')).iterdir(), key=os.path.getmtime, reverse=True)
+  #video_files = [path.name for path in paths]
+  paths_unsorted = glob.glob(os.path.join(app.root_path,'static/video/', '*.mp4'))
+  paths = sorted(paths_unsorted, key=lambda t: os.stat(t).óst_mtime, reverse=True)
+  video_files = [os.path.basename(path) for path in paths]
   logging.info("Paths:"+str(video_files))
 
   message = None
