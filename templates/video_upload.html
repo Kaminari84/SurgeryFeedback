@@ -96,7 +96,7 @@
     <ul>
     {% for video_file in video_files %}
       <li>
-        {{ video_file }}
+       <a href="{{ url_for('static', filename="video/"+video_file) }}" target="_blank"> {{ video_file }} </a>
         <button id="{{ video_file }}" onClick="removeVideo('{{ video_file }}');" type="button" class="btn btn-outline-light text-danger">Remove</button>
       </li>
     {% endfor %}
