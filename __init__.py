@@ -160,13 +160,13 @@ def main_page():
                       "general_assessment": "",
                       "issue_list_intro": "",
                       "issues": ["Fewer than 2 re-positions of the needle happend", 
-                                 "You adjusted needle grasp position based on depth of bite"]},
+                                 "Adjustments of needle grasp position based on depth of bite"]},
 
       "fail_level": {"encouragement": "Almost there!", 
                       "general_assessment": "",
                       "issue_list_intro": "",
                       "issues": ["Likely more than 3 re-positions of the needle happend", 
-                                 "You grasped the needle outside of the acceptable range"]
+                                 "Grasping the the needle outside of the acceptable range"]
                       }
     },
     {
