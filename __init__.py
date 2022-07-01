@@ -157,16 +157,16 @@ def main_page():
       "ideal_skill_video": needle_handling_ideal_video,
       "domain_name": "Needle Handling (Needle Repositions)",
       "ideal_level": {"encouragement": "Good work!", 
-                      "general_assessment": "Your gestures show intent.",
-                      "issue_list_intro": "You accomplishments:",
-                      "issues": ["Fewer than 2 re-positions of the needle happend.", 
-                                 "You adjusted needle grasp position based on depth of bite."]},
+                      "general_assessment": "",
+                      "issue_list_intro": "",
+                      "issues": ["Fewer than 2 re-positions of the needle happend", 
+                                 "You adjusted needle grasp position based on depth of bite"]},
 
       "fail_level": {"encouragement": "Almost there!", 
-                      "general_assessment": "Still, your gesture sequence shows little to no intent.",
-                      "issue_list_intro": "Possible issues (compare with ideal video on the right):",
+                      "general_assessment": "",
+                      "issue_list_intro": "",
                       "issues": ["Likely more than 3 re-positions of the needle happend", 
-                                 "You grasped the needle outside of the acceptable range."]
+                                 "You grasped the needle outside of the acceptable range"]
                       }
     },
     {
@@ -175,15 +175,15 @@ def main_page():
       "ideal_skill_video": needle_driving_ideal_video,
       "domain_name": "Needle Driving (Driving Smoothness)",
       "ideal_level": {"encouragement": "Good work!", 
-                      "general_assessment": "Your needle driving is smooth.",
-                      "issue_list_intro": "You accomplishments:",
+                      "general_assessment": "",
+                      "issue_list_intro": "",
                       "issues": ["Smooth, continuous motion", 
                                  "Maximum 1 adjustment during driving (no complete withdrawal of needle)",
                                  "Maximum 1 additional re-grab of needle"]},
 
       "fail_level": {"encouragement": "Almost there!", 
-                      "general_assessment": "Still, your needle driving could be improved.",
-                      "issue_list_intro": "Possible issues (compare with ideal video on the right):",
+                      "general_assessment": "",
+                      "issue_list_intro": "",
                       "issues": ["More then 2 adjustments during driving", 
                                  "2 or more additional regrabs of needle",
                                  "Complete removal of needle (reverse progress) and re-drive"]
@@ -192,7 +192,7 @@ def main_page():
   ]
 
   resp = make_response(render_template('video_playback.html', 
-                            domain_specs = domain_specs)
+                            domain_specs = domain_specs, color_mode='dark')
                       )
   return resp
 
