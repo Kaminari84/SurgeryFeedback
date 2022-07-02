@@ -171,7 +171,7 @@ def main_page():
                       "general_assessment": "",
                       "issue_list_intro": "",
                       "issues": ["Likely more than 3 re-positions of the needle happend", 
-                                 "Grasping the the needle outside of the acceptable range"]
+                                 "Grasping the needle outside of the acceptable range"]
                       }
     },
     {
