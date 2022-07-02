@@ -21,6 +21,9 @@
     <script src="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.js"></script>
     <link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet'>
     <link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet'>
+
+    <!-- Custom Sticky Footer -->
+    <link rel="stylesheet" href="./static/stylesheets/sticky-footer.css" />
       
     <!--SCRIPT-->
     <script>
@@ -54,6 +57,10 @@
         
       });
 
+      function nextPage(page) {
+        window.location.href = "/?p=2&page="+page;
+      }
+
     </script>
 
   </head>
@@ -80,28 +87,15 @@
         
         </div>
 
-        <!-- Video label -->
-        <!-- Bootstrap4 centering: https://stackoverflow.com/questions/42528411/center-the-content-inside-a-column-in-bootstrap -->
-        <div class="row justify-content-center">
-          <!-- LABEL ROW -->
-          <div class="col-md-6 order-md-1 mx-auto">
-            <div class="text-center">
-              <h5>Video from your task</h5>
-            </div>
-              
-          </div>
-    
-          <div class="col-md-6 order-md-1 mx-auto">
-            <div class="text-center">
-              <h5>Ideal reference video</h5>
-            </div>
-          </div>
-        </div>
+        <div class="row" style="height: 20px" ></div>
 
         <!-- VIDEO ROW -->
         <div class="row justify-content-center">        
           <div class="col-md-6 order-md-1 mx-auto">
             <div class="text-center">
+              <div class="text-center">
+                <h5>Video from your task</h5>
+              </div>
               <!--<div class="embed-responsive embed-responsive-16by9">
                 <iframe class="embed-responsive-item" src="/static/video/negative1_72.avi" allowfullscreen></iframe>
               </div>-->
@@ -115,6 +109,10 @@
 
           <div class="col-md-6 order-md-1 mx-auto">
             <div class="text-center">
+                <div class="text-center">
+                  <h5>Ideal reference video</h5>
+                </div>
+
               <video width="100%" height="auto" autoplay muted loop>
                   <source src={{ url_for('static', filename="video/"+domain_spec.ideal_skill_video) }} type="video/mp4">
                   Your browser does not support the video tag.
@@ -168,9 +166,40 @@
         {% endif %}
 
       {% endfor %}
-     
+
+
+      <!-- Page controls -->
+      <div class="row justify-content-center">
+          <!-- LABEL ROW -->
+        <div class="col-md-12 order-md-1 mx-auto my-2">
+          <div class="text-center">
+            <!--<ul class="pagination justify-content-center">
+              <li class="page-item"><a class="page-link" href="#">Previous</a></li>
+              <li class="page-item"><a class="page-link" href="#">Next</a></li>
+            </ul>-->
+
+            {% if page == 1 %}
+              <button type="button" class="btn btn-outline-warning btn-lg" onClick="nextPage({{ page+1 }});">Continue</button>
+            {% elif page == 2%}
+              <button type="button" class="btn btn-outline-warning btn-lg" onClick="nextPage({{ page-1 }});">Previous</button>
+
+            {% endif %}
+
+          </div>
+        </div>         
+      </div>
+
 
     </main>
+
+    <!-- Footer with buttons -->
+    <!--<footer class="footer bg-secondary">
+      <div class="container justify-content-center">
+        <div class="text-right">
+          <button type="button" class="btn btn-outline-warning btn-lg" onClick="nextPage({{ page+1 }});">Continue</button>
+        </div>
+      </div>
+    </footer>-->
 
     <!-- Bootstrap JS -->
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>

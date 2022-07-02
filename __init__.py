@@ -121,6 +121,9 @@ def main_page():
   pid = safe_cast(request.args.get('p'), int, default=None)
   logging.info("PID:"+str(pid))
 
+  page = safe_cast(request.args.get('page'), int, default=1)
+  logging.info("Page:"+str(page))
+  
   # get videos for the participant
   pidVideos = glob.glob(os.path.join(app.root_path,'static/video/','p'+str(pid)+'_*.mp4'))
   pidVideos = [os.path.basename(path) for path in pidVideos]
@@ -191,8 +194,11 @@ def main_page():
     }
   ]
 
+  logging.info("Spec:" + json.dumps(domain_specs[page-1:page]))
+
   resp = make_response(render_template('video_playback.html', 
-                            domain_specs = domain_specs, color_mode='dark')
+                            domain_specs = domain_specs[page-1:page],
+                            page = page)
                       )
   return resp
 
