@@ -198,7 +198,8 @@ def main_page():
 
   resp = make_response(render_template('video_playback.html', 
                             domain_specs = domain_specs[page-1:page],
-                            page = page)
+                            page = page,
+                            pid = pid)
                       )
   return resp
 
