@@ -123,6 +123,8 @@ def main_page():
 
   page = safe_cast(request.args.get('page'), int, default=1)
   logging.info("Page:"+str(page))
+  if page<1 or page>2:
+    page=1
   
   # get videos for the participant
   pidVideos = glob.glob(os.path.join(app.root_path,'static/video/','p'+str(pid)+'_*.mp4'))
