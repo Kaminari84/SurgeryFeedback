@@ -112,6 +112,9 @@ setup_app(app)
 ## VIDEO FEEDBACK INTERFACE ##
 @app.route('/', methods = ['GET','POST'])
 def main_page():
+  alt_text = safe_cast(request.args.get('alt_text'), int, default=None)
+  logging.info("Alt text:"+str(alt_text))
+
   needle_handling_skill = safe_cast(request.args.get('needle_handling_skill'), int, default=None)
   logging.info("Needle handling skill:"+str(needle_handling_skill))
 
@@ -201,7 +204,8 @@ def main_page():
   resp = make_response(render_template('video_playback.html', 
                             domain_specs = domain_specs[page-1:page],
                             page = page,
-                            pid = pid)
+                            pid = pid,
+                            alt_text = alt_text)
                       )
   return resp
 
