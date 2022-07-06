@@ -141,6 +141,9 @@ def main_page():
   needle_handling_p_video = 'handling_ideal.mp4'
   needle_driving_p_video = 'driving_ideal.mp4'
 
+  needle_handling_skill = None
+  needle_driving_skill = None
+
   # extract from video if not explicitly specified
   for pidVid in pidVideos:
     if 'handling' in pidVid:
