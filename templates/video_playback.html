@@ -59,9 +59,9 @@
       });
 
       function nextPage(page) {
-        params = [['alt_text', alt_text]] 
-        //[["needle_driving_skill", needle_driving_skill], 
-        //["needle_handling_skill", needle_handling_skill]];
+        params = [['alt_text', alt_text], 
+        ["needle_driving_skill", needle_driving_skill], 
+        ["needle_handling_skill", needle_handling_skill]];
 
         url = "/?p={{ pid }}&page="+page;
         for (i=0; i<params.length; i++) {
@@ -176,24 +176,24 @@
               <!-- IDEAL -->
               {% if domain_spec.skill == 1 %}
                 <div class="bg-dark text-light">
-                  <b>{{ domain_spec.ideal_level.encouragement }}</b> 
+                  <b>{{ domain_spec.ideal_level.encouragement|safe }}</b> 
                   {{ domain_spec.ideal_level.general_assessment }} <br />
                   {{ domain_spec.ideal_level.issue_list_intro }}
                   <ul>
                     {% for issue in domain_spec.ideal_level.issues %}
-                      <li> {{ issue }}</li>
+                      <li> {{ issue|safe }}</li>
                     {% endfor %}
                   </ul>
                 </div>
               <!-- ADEQUATE - FAIL -->
               {% elif domain_spec.skill == 0 %}
                 <div class="bg-dark text-light">
-                  <b>{{ domain_spec.fail_level.encouragement }}</b> 
+                  <b>{{ domain_spec.fail_level.encouragement|safe }}</b> 
                   {{ domain_spec.fail_level.general_assessment }}
                   {{ domain_spec.fail_level.issue_list_intro }}
                   <ul>
                     {% for issue in domain_spec.fail_level.issues %}
-                      <li> {{ issue }}</li>
+                      <li> {{ issue|safe }}</li>
                     {% endfor %}
                   </ul>
                 </div>

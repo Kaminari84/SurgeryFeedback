@@ -115,11 +115,11 @@ def main_page():
   alt_text = safe_cast(request.args.get('alt_text'), int, default=None)
   logging.info("Alt text:"+str(alt_text))
 
-  needle_handling_skill = safe_cast(request.args.get('needle_handling_skill'), int, default=None)
-  logging.info("Needle handling skill:"+str(needle_handling_skill))
+  needle_handling_skill_man = safe_cast(request.args.get('needle_handling_skill'), int, default=None)
+  logging.info("Needle handling skill:"+str(needle_handling_skill_man))
 
-  needle_driving_skill = safe_cast(request.args.get('needle_driving_skill'), int, default=None)
-  logging.info("Needle driving skill:"+str(needle_driving_skill))
+  needle_driving_skill_man = safe_cast(request.args.get('needle_driving_skill'), int, default=None)
+  logging.info("Needle driving skill:"+str(needle_driving_skill_man))
 
   pid = safe_cast(request.args.get('p'), int, default=None)
   logging.info("PID:"+str(pid))
@@ -138,43 +138,49 @@ def main_page():
   needle_handling_ideal_video = 'handling_ideal.mp4'
   needle_driving_ideal_video = 'driving_ideal.mp4'
 
-  needle_handling_p_video = 'Robota.mp4'
-  needle_driving_p_video = 'Robota.mp4'
+  needle_handling_p_video = 'handling_ideal.mp4'
+  needle_driving_p_video = 'driving_ideal.mp4'
 
   # extract from video if not explicitly specified
   for pidVid in pidVideos:
     if 'handling' in pidVid:
-      if needle_handling_skill == None:
+      if needle_handling_skill_man == None:
         digits = re.findall(r'\d+', pidVid)
         needle_handling_skill = safe_cast(digits[1], int, default=None)
+        logging.info("Extracted 'needle handling' skill from video "+str(pidVid)+": "+str(needle_handling_skill))
       needle_handling_p_video = pidVid
-      logging.info("Extracted 'needle handling' skill from video "+str(pidVid)+": "+str(needle_handling_skill))
-    
+      
   for pidVid in pidVideos:
     if 'driving' in pidVid:
-      if needle_driving_skill == None:
+      if needle_driving_skill_man == None:
         digits = re.findall(r'\d+', pidVid)
         needle_driving_skill = safe_cast(digits[1], int, default=None)
+        logging.info("Extracted 'needle driving' skill from video "+str(pidVid)+": "+str(needle_driving_skill))
       needle_driving_p_video = pidVid
-      logging.info("Extracted 'needle driving' skill from video "+str(pidVid)+": "+str(needle_driving_skill))
     
+  # video assessment overriden by manual specification of skill
+  if needle_driving_skill_man != None:
+    needle_driving_skill = needle_driving_skill_man
+  if needle_handling_skill_man != None:
+    needle_handling_skill = needle_handling_skill_man
+  
   domain_specs = [ 
     {
       "skill": needle_handling_skill, "skill_var_name": "needle_handling_skill",
       "p_skill_video": needle_handling_p_video,
       "ideal_skill_video": needle_handling_ideal_video,
       "domain_name": "Needle Handling (Needle Repositions)",
-      "ideal_level": {"encouragement": "Good work!", 
+      "ideal_level": {"encouragement": "Good work! You successfully:", 
                       "general_assessment": "",
                       "issue_list_intro": "",
-                      "issues": ["Fewer than 2 re-positions of the needle happend", 
-                                 "Adjustments of needle grasp position based on depth of bite"]},
+                      "issues": ["Held the needle at 3/4<sup>th</sup> length", 
+                                 "Re-grabbed the needle fewer than 3 times per stitch"]},
 
-      "fail_level": {"encouragement": "Almost there!", 
+      "fail_level": {"encouragement": "You did not satisfy ideal criteria. To improve:", 
                       "general_assessment": "",
                       "issue_list_intro": "",
-                      "issues": ["Likely more than 3 re-positions of the needle happend", 
-                                 "Grasping the needle outside of the acceptable range"]
+                      "issues": ["Hold the needle at 3/4<sup>th</sup> length", 
+                                 "Do not re-grab the needle more than twice per stitch"]
                       }
     },
     {
@@ -182,19 +188,19 @@ def main_page():
       "p_skill_video": needle_driving_p_video,
       "ideal_skill_video": needle_driving_ideal_video,
       "domain_name": "Needle Driving (Driving Smoothness)",
-      "ideal_level": {"encouragement": "Good work!", 
+      "ideal_level": {"encouragement": "Good work! You successfully:", 
                       "general_assessment": "",
                       "issue_list_intro": "",
-                      "issues": ["Smooth, continuous motion", 
-                                 "Maximum 1 adjustment during driving (no complete withdrawal of needle)",
-                                 "Maximum 1 additional re-grab of needle"]},
+                      "issues": ["Used smooth, continuous motion", 
+                                 "Adjusted the needle fewer than 2 times while driving",
+                                 "Re-grabbed the needle fewer than 1 time per stitch "]},
 
-      "fail_level": {"encouragement": "Almost there!", 
+      "fail_level": {"encouragement": "You did not satisfy ideal criteria. To improve:", 
                       "general_assessment": "",
                       "issue_list_intro": "",
-                      "issues": ["More then 2 adjustments during driving", 
-                                 "2 or more additional regrabs of needle",
-                                 "Complete removal of needle (reverse progress) and re-drive"]
+                      "issues": ["Use a smooth, continuous motion", 
+                                 "Do not re-grab the needle more than once per stitch",
+                                 "Do not re-adjust the needle more than once while driving"]
                       }
     }
   ]
@@ -205,7 +211,10 @@ def main_page():
                             domain_specs = domain_specs[page-1:page],
                             page = page,
                             pid = pid,
-                            alt_text = alt_text)
+                            alt_text = alt_text,
+                            needle_driving_skill = needle_driving_skill_man,
+                            needle_handling_skill = needle_handling_skill_man
+                          )
                       )
   return resp
 
