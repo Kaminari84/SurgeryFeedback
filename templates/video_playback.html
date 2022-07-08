@@ -107,7 +107,7 @@
           <div class="col-md-6 order-md-1 mx-auto">
             <div class="text-center">
               <div class="text-center">
-                <h5>Video from your task</h5>
+                <h5>YOUR Video</h5>
               </div>
               <!--<div class="embed-responsive embed-responsive-16by9">
                 <iframe class="embed-responsive-item" src="/static/video/negative1_72.avi" allowfullscreen></iframe>
@@ -123,7 +123,7 @@
           <div class="col-md-6 order-md-1 mx-auto">
             <div class="text-center">
                 <div class="text-center">
-                  <h5>Ideal reference video</h5>
+                  <h5>Expert Reference Video</h5>
                 </div>
 
               <video width="100%" height="auto" autoplay muted loop>
@@ -170,14 +170,14 @@
         {% else %}
           {% if domain_spec.skill is not none %}
           <div class="row justify-content-center">        
-            <div class="col-md-8 order-md-1 mx-auto">
+            <div class="col-md-10 order-md-1 mx-auto">
 
               <h5>
               <!-- IDEAL -->
               {% if domain_spec.skill == 1 %}
                 <div class="bg-dark text-light">
-                  <b>{{ domain_spec.ideal_level.encouragement|safe }}</b> 
-                  {{ domain_spec.ideal_level.general_assessment }} <br />
+                  <b><p class="text-success" style="margin: 0em; padding: 0em">{{ domain_spec.ideal_level.encouragement|safe }}</p></b> 
+                  <!--{{ domain_spec.ideal_level.general_assessment }} <br />-->
                   {{ domain_spec.ideal_level.issue_list_intro }}
                   <ul>
                     {% for issue in domain_spec.ideal_level.issues %}
@@ -188,14 +188,21 @@
               <!-- ADEQUATE - FAIL -->
               {% elif domain_spec.skill == 0 %}
                 <div class="bg-dark text-light">
-                  <b>{{ domain_spec.fail_level.encouragement|safe }}</b> 
-                  {{ domain_spec.fail_level.general_assessment }}
+                  <b><p class="text-danger" style="margin: 0em; padding: 0em">{{ domain_spec.fail_level.encouragement|safe }}</p></b> 
+                  <!--{{ domain_spec.fail_level.general_assessment }}-->
                   {{ domain_spec.fail_level.issue_list_intro }}
+                  {% if domain_spec.fail_level.issues|length > 1 %}
                   <ul>
                     {% for issue in domain_spec.fail_level.issues %}
                       <li> {{ issue|safe }}</li>
                     {% endfor %}
                   </ul>
+                  {% else %}
+                    {% for issue in domain_spec.fail_level.issues %}
+                      {{ issue|safe }}  
+                    {% endfor %}
+
+                  {% endif %}
                 </div>
               {% endif %}
               </h5>

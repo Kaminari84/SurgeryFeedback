@@ -172,38 +172,37 @@ def main_page():
       "skill": needle_handling_skill, "skill_var_name": "needle_handling_skill",
       "p_skill_video": needle_handling_p_video,
       "ideal_skill_video": needle_handling_ideal_video,
-      "domain_name": "Needle Handling (Needle Repositions)",
-      "ideal_level": {"encouragement": "Good work! You successfully:", 
+      "domain_name": "Needle Handling (Repositions)",
+      "ideal_level": {"encouragement": "Good work!", 
                       "general_assessment": "",
-                      "issue_list_intro": "",
+                      "issue_list_intro": "You successfully:",
                       "issues": ["Held the needle at 3/4<sup>th</sup> length", 
                                  "Re-grabbed the needle fewer than 3 times per stitch"]},
 
-      "fail_level": {"encouragement": "You did not satisfy ideal criteria. To improve:", 
+      "fail_level": {"encouragement": "You did not satisfy ideal criteria!", 
                       "general_assessment": "",
-                      "issue_list_intro": "",
-                      "issues": ["Hold the needle at 3/4<sup>th</sup> length", 
-                                 "Do not re-grab the needle more than twice per stitch"]
+                      "issue_list_intro": "To improve:",
+                      "issues": ["Minimize number of re-grabs of the needle (<2 times)"]
                       }
     },
     {
       "skill": needle_driving_skill, "skill_var_name": "needle_driving_skill", 
       "p_skill_video": needle_driving_p_video,
       "ideal_skill_video": needle_driving_ideal_video,
-      "domain_name": "Needle Driving (Driving Smoothness)",
-      "ideal_level": {"encouragement": "Good work! You successfully:", 
+      "domain_name": "Needle Driving (Smoothness)",
+      "ideal_level": {"encouragement": "Good work!", 
                       "general_assessment": "",
-                      "issue_list_intro": "",
+                      "issue_list_intro": "You successfully:",
                       "issues": ["Used smooth, continuous motion", 
-                                 "Adjusted the needle fewer than 2 times while driving",
-                                 "Re-grabbed the needle fewer than 1 time per stitch "]},
+                                 "Re-grabbed the needle fewer than 1 time per stitch "
+                                 "Adjusted the needle fewer than 2 times while driving"]},
 
-      "fail_level": {"encouragement": "You did not satisfy ideal criteria. To improve:", 
+      "fail_level": {"encouragement": "You did not satisfy ideal criteria!", 
                       "general_assessment": "",
-                      "issue_list_intro": "",
+                      "issue_list_intro": "To improve:",
                       "issues": ["Use a smooth, continuous motion", 
-                                 "Do not re-grab the needle more than once per stitch",
-                                 "Do not re-adjust the needle more than once while driving"]
+                                 "Minimize re-grabbing the needle, no more than once per stitch",
+                                 "Minimize re-adjusting the needle, no more than once while driving"]
                       }
     }
   ]
