@@ -135,75 +135,106 @@ def main_page():
   logging.info("PID videos:" + str(pidVideos))
 
   # default videos
-  needle_handling_ideal_video = 'handling_ideal.mp4'
-  needle_driving_ideal_video = 'driving_ideal.mp4'
+  videos = {"handling": ['none', 'none'],
+            "driving": ['none', 'none']}
 
-  needle_handling_p_video = 'handling_ideal.mp4'
-  needle_driving_p_video = 'driving_ideal.mp4'
+  skills = {"handling": None, "driving": None}
 
-  needle_handling_skill = None
-  needle_driving_skill = None
+  error_message = None
 
   # extract from video if not explicitly specified
+  base_count = 0
+  non_base_count = 0
   for pidVid in pidVideos:
-    if 'handling' in pidVid:
-      if needle_handling_skill_man == None:
+    for domain in ['handling', 'driving']:
+      if domain in pidVid and 'base' in pidVid:
         digits = re.findall(r'\d+', pidVid)
-        needle_handling_skill = safe_cast(digits[1], int, default=None)
-        logging.info("Extracted 'needle handling' skill from video "+str(pidVid)+": "+str(needle_handling_skill))
-      needle_handling_p_video = pidVid
-      
-  for pidVid in pidVideos:
-    if 'driving' in pidVid:
-      if needle_driving_skill_man == None:
+        skills[domain] = 2
+        if len(digits) < 2:
+          error_message = "Wrong format of "+str(domain)+" baseline file: "+str(pidVid)
+          logging.info(error_message)
+        else:
+          vid_no = safe_cast(digits[1], int, default=None)
+          if vid_no == None:
+            error_message = "Second digit in "+str(pidVid)+" , not a number!"
+            logging.info(error_message)
+          else:
+            videos[domain][vid_no-1] = pidVid
+            logging.info("Baseline video "+str(digits[1])+", name:<"+str(pidVid)+">")
+      elif domain in pidVid :
         digits = re.findall(r'\d+', pidVid)
-        needle_driving_skill = safe_cast(digits[1], int, default=None)
-        logging.info("Extracted 'needle driving' skill from video "+str(pidVid)+": "+str(needle_driving_skill))
-      needle_driving_p_video = pidVid
+        if len(digits) < 2:
+          error_message = "Wrong format of "+str(domain)+" intervention file: "+str(pidVid)
+          logging.info(error_message)
+        else:
+          skills[domain] = safe_cast(digits[1], int, default=None)
+          logging.info("Extracted 'needle "+str(domain)+"' skill from video "+str(pidVid)+": "+str(skills[domain]))
+          videos[domain][0] = pidVid
+          videos[domain][1] = 'handling_ideal.mp4' if domain=="handling" else 'driving_ideal.mp4'
     
   # video assessment overriden by manual specification of skill
   if needle_driving_skill_man != None:
-    needle_driving_skill = needle_driving_skill_man
+    skills['driving'] = needle_driving_skill_man
   if needle_handling_skill_man != None:
-    needle_handling_skill = needle_handling_skill_man
+    skills['handling'] = needle_handling_skill_man
   
   domain_specs = [ 
     {
-      "skill": needle_handling_skill, "skill_var_name": "needle_handling_skill",
-      "p_skill_video": needle_handling_p_video,
-      "ideal_skill_video": needle_handling_ideal_video,
-      "domain_name": "Needle Handling (Repositions)",
-      "ideal_level": {"encouragement": "Good work!", 
-                      "general_assessment": "",
+      "skill": skills['handling'], "skill_var_name": "needle_handling_skill",
+      "video_1": videos['handling'][0],
+      "video_2": videos['handling'][1],
+      "ideal_level": {"domain_name": "Needle Handling (Repositions)",
+                      "video_1_title": "YOUR Video",
+                      "video_2_title": "Expert Reference Video",
+                      "encouragement": "Good work!", 
                       "issue_list_intro": "You successfully:",
                       "issues": ["Held the needle at 3/4<sup>th</sup> length", 
                                  "Re-grabbed the needle fewer than 3 times per stitch"]},
 
-      "fail_level": {"encouragement": "You did not satisfy ideal criteria!", 
-                      "general_assessment": "",
+      "fail_level": { "domain_name": "Needle Handling (Repositions)",
+                      "video_1_title": "YOUR Video",
+                      "video_2_title": "Expert Reference Video",
+                      "encouragement": "You did not satisfy ideal criteria!", 
                       "issue_list_intro": "To improve:",
                       "issues": ["Minimize number of re-grabs of the needle (<2 times)"]
-                      }
+                      },
+      "baseline":  {"domain_name": "Needle Handling",
+                    "video_1_title": "YOUR Video (randomly selected)",
+                    "video_2_title": "YOUR Video (randomly selected)",
+                    "encouragement": "",
+                    "issue_list_intro": "",
+                    "issues": [""]
+      }
     },
     {
-      "skill": needle_driving_skill, "skill_var_name": "needle_driving_skill", 
-      "p_skill_video": needle_driving_p_video,
-      "ideal_skill_video": needle_driving_ideal_video,
-      "domain_name": "Needle Driving (Smoothness)",
-      "ideal_level": {"encouragement": "Good work!", 
-                      "general_assessment": "",
+      "skill": skills['driving'], "skill_var_name": "needle_driving_skill", 
+      "video_1": videos['driving'][0],
+      "video_2": videos['driving'][1],
+      "ideal_level": {"domain_name": "Needle Driving (Smoothness)",
+                      "video_1_title": "YOUR Video",
+                      "video_2_title": "Expert Reference Video",
+                      "encouragement": "Good work!", 
                       "issue_list_intro": "You successfully:",
                       "issues": ["Used smooth, continuous motion", 
                                  "Re-grabbed the needle fewer than 1 time per stitch "
                                  "Adjusted the needle fewer than 2 times while driving"]},
 
-      "fail_level": {"encouragement": "You did not satisfy ideal criteria!", 
-                      "general_assessment": "",
+      "fail_level": { "domain_name": "Needle Driving (Smoothness)",
+                      "video_1_title": "YOUR Video",
+                      "video_2_title": "Expert Reference Video",
+                      "encouragement": "You did not satisfy ideal criteria!", 
                       "issue_list_intro": "To improve:",
                       "issues": ["Use a smooth, continuous motion", 
                                  "Minimize re-grabbing the needle, no more than once per stitch",
                                  "Minimize re-adjusting the needle, no more than once while driving"]
-                      }
+                      },
+      "baseline":  {"domain_name": "Needle Driving",
+                    "video_1_title": "YOUR Video (randomly selected)",
+                    "video_2_title": "YOUR Video (randomly selected)",
+                    "encouragement": "",
+                    "issue_list_intro": "",
+                    "issues": [""]
+      }
     }
   ]
 

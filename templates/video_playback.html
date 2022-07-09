@@ -41,7 +41,9 @@
         console.log("Alt Text: "+alt_text);
 
         {% for domain_spec in domain_specs %}
-          console.log("Video: {{domain_spec.p_skill_video}}");
+          console.log("Domain: {{ domain_spec.skill_var_name }}");
+          console.log("Video 1: {{domain_spec.video_1}}");
+          console.log("Video 2: {{domain_spec.video_2}}");
           console.log("Skill level: {{domain_spec.skill}}");
         {% endfor %}
 
@@ -94,7 +96,16 @@
           <!-- LABEL ROW -->
           <div class="col-md-12 order-md-1 mx-auto">
             <div class="light text-justify-left">
-              <h2>{{ domain_spec.domain_name }}</h2>
+              {% if domain_spec.skill is not none %}
+                {% if domain_spec.skill == 1 %}
+                  <h2>{{ domain_spec.ideal_level.domain_name }}</h2>
+                {% elif domain_spec.skill == 0 %}
+                  <h2>{{ domain_spec.fail_level.domain_name }}</h2>
+                {% elif domain_spec.skill == 2 %}
+                  <h2>{{ domain_spec.baseline.domain_name }}</h2>
+                {% endif %}
+              {% endif %}
+              
             </div>
           </div>
         
@@ -107,13 +118,22 @@
           <div class="col-md-6 order-md-1 mx-auto">
             <div class="text-center">
               <div class="text-center">
-                <h5>YOUR Video</h5>
+                {% if domain_spec.skill is not none %}
+                  {% if domain_spec.skill == 1 %}
+                    <h5> {{ domain_spec.ideal_level.video_1_title }}</h5>
+                  {% elif domain_spec.skill == 0 %}
+                    <h5> {{ domain_spec.fail_level.video_1_title }}</h5>
+                  {% elif domain_spec.skill == 2 %}
+                    <h5> {{ domain_spec.baseline.video_1_title }}</h5>
+                  {% endif %}
+                {% endif %}
+                  
               </div>
               <!--<div class="embed-responsive embed-responsive-16by9">
                 <iframe class="embed-responsive-item" src="/static/video/negative1_72.avi" allowfullscreen></iframe>
               </div>-->
               <video width="100%" height="auto" autoplay muted loop>
-                <source src={{ url_for('static', filename="video/"+domain_spec.p_skill_video) }} type="video/mp4">
+                <source src={{ url_for('static', filename="video/"+domain_spec.video_1) }} type="video/mp4">
                 Your browser does not support the video tag.
               </video>
             </div>
@@ -123,11 +143,19 @@
           <div class="col-md-6 order-md-1 mx-auto">
             <div class="text-center">
                 <div class="text-center">
-                  <h5>Expert Reference Video</h5>
+                  {% if domain_spec.skill is not none %}
+                    {% if domain_spec.skill == 1 %}
+                      <h5> {{ domain_spec.ideal_level.video_2_title }}</h5>
+                    {% elif domain_spec.skill == 0 %}
+                      <h5> {{ domain_spec.fail_level.video_2_title }}</h5>
+                    {% elif domain_spec.skill == 2 %}
+                      <h5> {{ domain_spec.baseline.video_2_title }}</h5>
+                    {% endif %}
+                  {% endif %}
                 </div>
 
               <video width="100%" height="auto" autoplay muted loop>
-                  <source src={{ url_for('static', filename="video/"+domain_spec.ideal_skill_video) }} type="video/mp4">
+                  <source src={{ url_for('static', filename="video/"+domain_spec.video_2) }} type="video/mp4">
                   Your browser does not support the video tag.
                 </video>
             </div>
@@ -204,6 +232,9 @@
 
                   {% endif %}
                 </div>
+              <!-- BASELINE -->
+              {% elif domain_spec.skill == 2 %}
+                <!-- EMPTY FEEDBACK -->
               {% endif %}
               </h5>
               
