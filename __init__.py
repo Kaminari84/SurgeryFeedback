@@ -216,8 +216,9 @@ def main_page():
                       "encouragement": "Good work!", 
                       "issue_list_intro": "You successfully:",
                       "issues": ["Used smooth, continuous motion", 
-                                 "Re-grabbed the needle fewer than 1 time per stitch "
-                                 "Adjusted the needle fewer than 2 times while driving"]},
+                                 "Adjusted the needle fewer than 2 times while driving",
+                                 "Re-grabbed the needle fewer than 1 time per stitch"
+                                 ]},
 
       "fail_level": { "domain_name": "Needle Driving (Smoothness)",
                       "video_1_title": "YOUR Video",
