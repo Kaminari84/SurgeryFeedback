@@ -188,8 +188,7 @@ def main_page():
                       "video_2_title": "Expert Reference Video",
                       "encouragement": "Good work!", 
                       "issue_list_intro": "You successfully:",
-                      "issues": ["Held the needle at 3/4<sup>th</sup> length", 
-                                 "Re-grabbed the needle fewer than 3 times per stitch"]},
+                      "issues": ["Re-grabbed the needle fewer than 3 times per stitch"]},
 
       "fail_level": { "domain_name": "Needle Handling (Repositions)",
                       "video_1_title": "YOUR Video",

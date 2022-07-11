@@ -207,11 +207,17 @@
                   <b><p class="text-success" style="margin: 0em; padding: 0em">{{ domain_spec.ideal_level.encouragement|safe }}</p></b> 
                   <!--{{ domain_spec.ideal_level.general_assessment }} <br />-->
                   {{ domain_spec.ideal_level.issue_list_intro }}
+                  {% if domain_spec.fail_level.issues|length > 1 %}
                   <ul>
                     {% for issue in domain_spec.ideal_level.issues %}
                       <li> {{ issue|safe }}</li>
                     {% endfor %}
                   </ul>
+                  {% else %}
+                    {% for issue in domain_spec.ideal_level.issues %}
+                      {{ issue|safe }}  
+                    {% endfor %}
+                  {% endif %}
                 </div>
               <!-- ADEQUATE - FAIL -->
               {% elif domain_spec.skill == 0 %}
