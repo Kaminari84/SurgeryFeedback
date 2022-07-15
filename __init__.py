@@ -294,6 +294,13 @@ def video_upload():
         filename = secure_filename(file.filename)
         file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
         #return redirect(request.url)
+        
+        # update paths
+        logging.info("Updating paths...")
+        paths_unsorted = glob.glob(os.path.join(app.root_path, 'static/video/', '*.mp4'))
+        paths = sorted(paths_unsorted, key=lambda t: os.stat(t).st_mtime, reverse=True)
+        video_files = [os.path.basename(path) for path in paths]
+        logging.info("Paths:"+str(video_files))
       else:
         logging.info("file extensions not allowed!")
         status = "ERROR"
